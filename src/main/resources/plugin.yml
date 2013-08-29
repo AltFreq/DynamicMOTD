@@ -1,4 +1,4 @@
-name: SlashServer
-main : com.minecraftdimensions.slashserver.SlashServer
-version: 1
+name: DynamicMOTD
+main : com.minecraftdimensions.dynamicmotd.DynamicMOTD
+version: 1.5
 author: Bloodsplat
