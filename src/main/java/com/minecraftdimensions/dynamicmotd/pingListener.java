@@ -9,6 +9,7 @@ import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+
 public class pingListener implements Listener {
 	
 	@EventHandler
@@ -39,5 +40,6 @@ public class pingListener implements Listener {
 			e.setResponse(new ServerPing(e.getResponse().getProtocolVersion(), e.getResponse().getGameVersion(), motd, players, maxPlayers));
 		}
 	}
+	
 
 }

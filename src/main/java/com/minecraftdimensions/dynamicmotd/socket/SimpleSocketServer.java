@@ -1,30 +1,14 @@
 package com.minecraftdimensions.dynamicmotd.socket;
 
 import java.net.*;
-import java.util.logging.Logger;
 import java.io.*;
 
-/*
- * Very simple socket server example. That responds to a single object with
- * another object. Could be used as the basis for something more complex, but
- * this illistrates the basics of TCP/IP communication.
- * 
- * A Client will call a Server with a message. The Server will respond with a message.
- * In this simplist implementation the messages can be any serializable object.
- * 
- * To setup a server:
- *  1) Create your handler, a class that implements the simple SimpleSocketHandler 
- *     interface.
- *  2) Call the static SimpleSocketServer.startServer() method with a port and an 
- *     instance of your SimpleSocketHandler defined above.
- *     
- * To call the server from a client:
- *  1) Call the static Client.send() method specifying the server host, port, and
- *     message. This returns your response.
- */
+
+import net.md_5.bungee.api.ChatColor;
 public class SimpleSocketServer extends Thread {
     
 	public static int DEFAULT_PORT = 14444;
+	private static int count = 0;
 	
     public static SimpleSocketServer startServer() {
     	return startServer(SimpleSocketServer.DEFAULT_PORT);
@@ -32,14 +16,28 @@ public class SimpleSocketServer extends Thread {
     public static synchronized SimpleSocketServer startServer(int port) {
         SimpleSocketServer simpleSocketServer = new SimpleSocketServer(port);
         simpleSocketServer.start();
-        while (!simpleSocketServer.isServerRunning()) {}
+        while (!SimpleSocketServer.isServerRunning()) {
+        	if(count==6){
+        		System.out.println(ChatColor.RED+"Unable to start socket Bukkit plugin will not function at 100%");
+        		return null;
+        	}
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        	if(count>0){
+        	System.out.println(ChatColor.RED+"Re-enabling socket");
+        	}
+        	count++;
+        	System.out.println("Starting socket on port "+ DEFAULT_PORT);
+        }
         return simpleSocketServer;
     }
 
-	private Logger jdkLogger = Logger.getLogger(this.getClass().getName());
     private int port;
-    private ServerSocket serverSocket = null;
-    private boolean bRunning = false;
+    private static ServerSocket serverSocket = null;
+    private static boolean bRunning = false;
     
     public SimpleSocketServer(int port) {
     	super("SimpleSock");
@@ -66,18 +64,15 @@ public class SimpleSocketServer extends Thread {
         	serverSocket = null;
         	bRunning = false;
         }
-        jdkLogger.info("Stopped");
     }
-    public void stopServer() {
-    	jdkLogger.info("Server: Stopping server...");
+    public static void stopServer() {
         try {
             if (serverSocket != null)
                 serverSocket.close();
         } catch (IOException e) {
-        	jdkLogger.severe("stopServer() error: " + e.toString());
         }
     }
-    public boolean isServerRunning() {
+    public static boolean isServerRunning() {
     	return bRunning;
     }
 }
